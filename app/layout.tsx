@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SessionProvider } from "next-auth/react";
 import { inter, playfair } from "@/lib/fonts";
 import { ThemeProvider } from "@/components/theme-provider";
 import "./globals.css";
@@ -54,9 +55,11 @@ export default function RootLayout({
       </head>
       <body className="bg-midnight text-text-primary antialiased">
         <ThemeProvider>
-          <div id="app-root" className="flex min-h-screen flex-col">
-            {children}
-          </div>
+          <SessionProvider>
+            <div id="app-root" className="flex min-h-screen flex-col">
+              {children}
+            </div>
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>

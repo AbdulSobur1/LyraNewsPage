@@ -60,16 +60,31 @@ export const articles = pgTable("articles", {
 });
 
 /**
+ * Users of the comment system.
+ * Simple email/password auth — no email verification needed.
+ */
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  name: varchar("name", { length: 100 }).notNull(),
+  hashedPassword: varchar("hashed_password", { length: 255 }).notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+/**
  * Comments on articles.
- * Lightweight: stores commenter name, text, and the article slug it belongs to.
- * No auth required — just a name for display.
+ * Linked to a user for ownership.
  */
 export const comments = pgTable(
   "comments",
   {
     id: serial("id").primaryKey(),
     articleSlug: varchar("article_slug", { length: 500 }).notNull(),
-    name: varchar("name", { length: 100 }).notNull(),
+    userId: integer("user_id")
+      .references(() => users.id, { onDelete: "cascade" })
+      .notNull(),
     text: text("text").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
@@ -88,6 +103,9 @@ export type NewCategory = typeof categories.$inferInsert;
 
 export type Article = typeof articles.$inferSelect;
 export type NewArticle = typeof articles.$inferInsert;
+
+export type User = typeof users.$inferSelect;
+export type NewUser = typeof users.$inferInsert;
 
 export type Comment = typeof comments.$inferSelect;
 export type NewComment = typeof comments.$inferInsert;
