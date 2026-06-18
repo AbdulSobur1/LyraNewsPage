@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+/* ─────────── Theme contract (Tailwind v4) ─────────── */
+@theme {
+  /* Dark-mode colours (default) */
+  --color-midnight: #0a0a0b;
+  --color-obsidian: #141416;
+  --color-surface: #1c1c20;
+  --color-gold: #c8a96e;
+  --color-gold-dim: rgba(200, 169, 110, 0.12);
+  --color-text-primary: #f0ede8;
+  --color-text-secondary: #8c8984;
+  --color-text-tertiary: #5a5855;
+  --color-category-red: #e05252;
+  --color-border-default: rgba(255, 255, 255, 0.07);
+  --color-border-hover: rgba(255, 255, 255, 0.14);
+
+  /* Light-mode colours (opt-in via .light class) */
+  --color-bg-light: #f5f3ee;
+  --color-card-light: #e8e4dd;
+
+  /* Typography (used via utility classes) */
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Radii */
+  --radius-card: 12px;
+  --radius-hero: 14px;
+  --radius-pill: 20px;
+  --radius-chip: 4px;
+
+  /* Animations */
+  --animate-ticker: ticker 28s linear infinite;
+}
+
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ─────────── CSS custom properties (legacy / inline access) ─────────── */
+:root {
+  --midnight: #0a0a0b;
+  --obsidian: #141416;
+  --surface: #1c1c20;
+  --border: rgba(255, 255, 255, 0.07);
+  --border-hover: rgba(255, 255, 255, 0.14);
+  --gold: #c8a96e;
+  --gold-dim: rgba(200, 169, 110, 0.12);
+  --text-primary: #f0ede8;
+  --text-secondary: #8c8984;
+  --text-tertiary: #5a5855;
+  --category-red: #e05252;
+  --bg-light: #f5f3ee;
+  --card-light: #e8e4dd;
+}
+
+.light {
+  --midnight: #f5f3ee;
+  --obsidian: #e8e4dd;
+  --surface: #ffffff;
+  --border: rgba(0, 0, 0, 0.08);
+  --border-hover: rgba(0, 0, 0, 0.15);
+  --gold: #b8952e;
+  --gold-dim: rgba(184, 149, 46, 0.12);
+  --text-primary: #1a1a1d;
+  --text-secondary: #5a5855;
+  --text-tertiary: #8c8984;
+  --category-red: #c0392b;
+}
+
+/* ─────────── Base reset ─────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--midnight);
+  color: var(--text-primary);
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─────────── Utility for 0.5px borders ─────────── */
+.border-hairline {
+  border-width: 0.5px;
+}
+
+/* ─────────── Focus-visible ring ─────────── */
+*:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* ─────────── Accessibility: reduced motion ─────────── */
+@media (prefers-reduced-motion: reduce) {
+  .animate-ticker {
+    animation: none;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

@@ -1,0 +1,569 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --midnight: #0A0A0B;
+  --obsidian: #141416;
+  --surface: #1C1C20;
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.14);
+  --gold: #C8A96E;
+  --gold-dim: rgba(200,169,110,0.12);
+  --text-primary: #F0EDE8;
+  --text-secondary: #8C8984;
+  --text-tertiary: #5A5855;
+  --category-red: #E05252;
+}
+body { background: var(--midnight); font-family: 'Inter', var(--font-sans), sans-serif; color: var(--text-primary); font-size: 15px; }
+
+/* Ticker */
+.ticker-wrap {
+  background: var(--gold);
+  padding: 0;
+  overflow: hidden;
+  height: 32px;
+  display: flex;
+  align-items: center;
+}
+.ticker-label {
+  background: #0A0A0B;
+  color: var(--gold);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0 14px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  white-space: nowrap;
+  animation: ticker 28s linear infinite;
+  padding-left: 20px;
+}
+.ticker-track span {
+  font-size: 11px;
+  font-weight: 500;
+  color: #0A0A0B;
+  letter-spacing: 0.01em;
+}
+.ticker-sep { color: rgba(0,0,0,0.3); font-size: 10px; }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+/* Nav */
+.nav {
+  border-bottom: 0.5px solid var(--border);
+  background: rgba(10,10,11,0.95);
+  backdrop-filter: blur(12px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-inner {
+  max-width: 100%;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  height: 56px;
+  gap: 28px;
+}
+.brand {
+  font-family: 'Playfair Display', var(--font-serif), Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  flex-shrink: 0;
+}
+.brand span { color: var(--gold); }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+}
+.nav-link {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+.nav-link:hover { color: var(--text-primary); background: rgba(255,255,255,0.05); }
+.nav-link.active { color: var(--gold); }
+.nav-actions { display: flex; align-items: center; gap: 10px; }
+.nav-search {
+  background: rgba(255,255,255,0.05);
+  border: 0.5px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px 6px 32px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  width: 180px;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.search-wrap { position: relative; }
+.search-wrap i { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 14px; color: var(--text-tertiary); }
+.nav-icon-btn {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  border: 0.5px solid var(--border);
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 16px;
+  transition: all 0.15s;
+}
+.nav-icon-btn:hover { background: rgba(255,255,255,0.05); color: var(--text-primary); }
+
+/* Main layout */
+.main { padding: 28px 20px; max-width: 100%; }
+
+/* Date bar */
+.date-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 0.5px solid var(--border);
+}
+.date-text { font-size: 12px; color: var(--text-tertiary); letter-spacing: 0.04em; }
+.edition-badge {
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--gold);
+  border: 0.5px solid rgba(200,169,110,0.3);
+  padding: 3px 8px; border-radius: 4px;
+}
+
+/* Hero card */
+.hero {
+  border-radius: 14px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 20px;
+  cursor: pointer;
+  height: 360px;
+  background: linear-gradient(135deg, #1A1A2E 0%, #16213E 50%, #0F3460 100%);
+  border: 0.5px solid var(--border);
+}
+.hero-img-placeholder {
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.hero-img-placeholder i { font-size: 64px; color: rgba(255,255,255,0.06); }
+.hero-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0) 100%);
+}
+.hero-content {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 28px 28px 24px;
+}
+.hero-cat {
+  display: inline-flex; align-items: center;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  background: var(--gold);
+  color: #0A0A0B;
+  padding: 3px 9px; border-radius: 4px;
+  margin-bottom: 12px;
+}
+.hero-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 30px; font-weight: 700;
+  line-height: 1.22;
+  letter-spacing: -0.02em;
+  color: #fff;
+  margin-bottom: 12px;
+  max-width: 580px;
+}
+.hero-meta {
+  display: flex; align-items: center; gap: 16px;
+  font-size: 12px; color: rgba(255,255,255,0.55);
+}
+.hero-meta-dot { width: 3px; height: 3px; border-radius: 50%; background: rgba(255,255,255,0.3); }
+
+/* Grid */
+.grid-section-title {
+  font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+.grid-section-title::after {
+  content: '';
+  flex: 1;
+  height: 0.5px;
+  background: var(--border);
+}
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+
+/* Article card */
+.art-card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.art-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+.art-card-img {
+  height: 130px;
+  background: linear-gradient(135deg, #1C1C2E, #2A2A3E);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden;
+}
+.art-card-img i { font-size: 36px; color: rgba(255,255,255,0.07); }
+.art-cat-pill {
+  position: absolute; top: 10px; left: 10px;
+  font-size: 9px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
+  background: rgba(0,0,0,0.7); color: rgba(255,255,255,0.75);
+  padding: 2px 7px; border-radius: 4px;
+  backdrop-filter: blur(4px);
+}
+.art-body { padding: 14px; }
+.art-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 15px; font-weight: 700;
+  line-height: 1.35; letter-spacing: -0.01em;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.art-meta {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 11px; color: var(--text-tertiary);
+}
+.art-source { display: flex; align-items: center; gap: 5px; }
+.art-source-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); opacity: 0.6; }
+.art-actions { display: flex; gap: 6px; }
+.art-action {
+  width: 24px; height: 24px;
+  border-radius: 6px;
+  border: 0.5px solid transparent;
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--text-tertiary); font-size: 13px;
+  transition: all 0.15s;
+}
+.art-action:hover { background: rgba(255,255,255,0.07); color: var(--text-primary); border-color: var(--border); }
+
+/* Sidebar layout (below grid) */
+.two-col { display: grid; grid-template-columns: 1fr 280px; gap: 20px; }
+.list-card {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.list-item {
+  display: flex; gap: 14px;
+  padding: 14px 16px;
+  border-bottom: 0.5px solid var(--border);
+  cursor: pointer; transition: background 0.15s;
+  align-items: flex-start;
+}
+.list-item:last-child { border-bottom: none; }
+.list-item:hover { background: rgba(255,255,255,0.02); }
+.list-num {
+  font-size: 22px; font-weight: 700;
+  color: var(--text-tertiary);
+  font-family: 'Playfair Display', Georgia, serif;
+  min-width: 28px; line-height: 1;
+  margin-top: 2px;
+}
+.list-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 14px; font-weight: 700;
+  line-height: 1.35;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.list-meta { font-size: 11px; color: var(--text-tertiary); }
+
+/* Sidebar */
+.sidebar {}
+.sidebar-section {
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.sidebar-title {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 14px;
+}
+.trend-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 0;
+  border-bottom: 0.5px solid var(--border);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.trend-item:last-child { border-bottom: none; }
+.trend-item:hover .trend-label { color: var(--gold); }
+.trend-tag {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.05em;
+  color: var(--text-tertiary); font-family: monospace;
+  min-width: 24px;
+}
+.trend-label { font-size: 13px; color: var(--text-secondary); flex: 1; }
+.trend-count { font-size: 11px; color: var(--text-tertiary); }
+
+.cat-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.cat-chip {
+  font-size: 11px; font-weight: 500;
+  padding: 5px 12px; border-radius: 20px;
+  border: 0.5px solid var(--border);
+  color: var(--text-secondary);
+  cursor: pointer; transition: all 0.15s;
+  background: transparent;
+}
+.cat-chip:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
+.cat-chip.active { border-color: var(--gold); color: var(--gold); background: var(--gold-dim); }
+</style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+
+<!-- Breaking ticker -->
+<div class="ticker-wrap">
+  <div class="ticker-label">Breaking</div>
+  <div style="overflow:hidden; flex:1;">
+    <div class="ticker-track">
+      <span>Global Markets Rally As Fed Signals Rate Pause</span><span class="ticker-sep">·</span>
+      <span>UN Emergency Session Called Over Eastern Crisis</span><span class="ticker-sep">·</span>
+      <span>Tech Giants Face New Antitrust Framework in EU</span><span class="ticker-sep">·</span>
+      <span>Climate Summit Reaches Historic 150-Nation Agreement</span><span class="ticker-sep">·</span>
+      <span>Global Markets Rally As Fed Signals Rate Pause</span><span class="ticker-sep">·</span>
+      <span>UN Emergency Session Called Over Eastern Crisis</span><span class="ticker-sep">·</span>
+      <span>Tech Giants Face New Antitrust Framework in EU</span><span class="ticker-sep">·</span>
+      <span>Climate Summit Reaches Historic 150-Nation Agreement</span><span class="ticker-sep">·</span>
+    </div>
+  </div>
+</div>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="brand">Lyra<span>.</span></div>
+    <div class="nav-links">
+      <div class="nav-link active">Top</div>
+      <div class="nav-link">World</div>
+      <div class="nav-link">Business</div>
+      <div class="nav-link">Technology</div>
+      <div class="nav-link">Sports</div>
+      <div class="nav-link">Science</div>
+    </div>
+    <div class="nav-actions">
+      <div class="search-wrap">
+        <i class="ti ti-search"></i>
+        <input style="background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.07);border-radius:8px;padding:6px 12px 6px 32px;font-size:13px;color:rgba(255,255,255,0.4);width:180px;outline:none;" placeholder="Search headlines…" />
+      </div>
+      <button class="nav-icon-btn" aria-label="Bookmarks"><i class="ti ti-bookmark" aria-hidden="true"></i></button>
+      <button class="nav-icon-btn" aria-label="Toggle theme"><i class="ti ti-sun" aria-hidden="true"></i></button>
+    </div>
+  </div>
+</nav>
+
+<!-- Main -->
+<main class="main">
+  <!-- Date bar -->
+  <div class="date-bar">
+    <div class="date-title" style="display:flex;align-items:baseline;gap:12px;">
+      <span style="font-size:12px;color:var(--text-tertiary);letter-spacing:0.04em;">THURSDAY, 18 JUNE 2026</span>
+    </div>
+    <span class="edition-badge">Global Edition</span>
+  </div>
+
+  <!-- Hero -->
+  <div class="hero" onclick="sendPrompt('How would the LyraNews article detail page look?')">
+    <div class="hero-img-placeholder"><i class="ti ti-globe" aria-hidden="true"></i></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-cat">World</div>
+      <div class="hero-title">Historic Climate Agreement Reached as 150 Nations Sign Landmark Emissions Treaty in Geneva</div>
+      <div class="hero-meta">
+        <span>Reuters</span>
+        <div class="hero-meta-dot"></div>
+        <span>2 hours ago</span>
+        <div class="hero-meta-dot"></div>
+        <span>5 min read</span>
+        <div style="flex:1;"></div>
+        <button style="background:rgba(255,255,255,0.1);border:0.5px solid rgba(255,255,255,0.15);border-radius:6px;color:rgba(255,255,255,0.7);font-size:11px;padding:5px 12px;cursor:pointer;display:flex;align-items:center;gap:5px;" onclick="event.stopPropagation()">
+          <i class="ti ti-share-2" style="font-size:12px;" aria-hidden="true"></i> Share
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Grid -->
+  <div class="grid-section-title">Latest stories</div>
+  <div class="grid">
+    <!-- Card 1 -->
+    <div class="art-card">
+      <div class="art-card-img" style="background:linear-gradient(135deg,#1e2a1e,#2a3a2e);">
+        <i class="ti ti-device-laptop" aria-hidden="true"></i>
+        <div class="art-cat-pill">Technology</div>
+      </div>
+      <div class="art-body">
+        <div class="art-title">OpenAI Releases GPT-5 With Real-Time Reasoning Capabilities</div>
+        <div class="art-meta">
+          <div class="art-source"><div class="art-source-dot"></div><span>The Verge</span></div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span>1h ago</span>
+            <div class="art-actions">
+              <button class="art-action" aria-label="Bookmark"><i class="ti ti-bookmark" aria-hidden="true"></i></button>
+              <button class="art-action" aria-label="Share"><i class="ti ti-share-2" aria-hidden="true"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="art-card">
+      <div class="art-card-img" style="background:linear-gradient(135deg,#2a1e1e,#3a2a1e);">
+        <i class="ti ti-chart-line" aria-hidden="true"></i>
+        <div class="art-cat-pill">Business</div>
+      </div>
+      <div class="art-body">
+        <div class="art-title">Fed Holds Rates Steady as Inflation Cools to 18-Month Low</div>
+        <div class="art-meta">
+          <div class="art-source"><div class="art-source-dot"></div><span>Bloomberg</span></div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span>3h ago</span>
+            <div class="art-actions">
+              <button class="art-action" aria-label="Bookmark"><i class="ti ti-bookmark" aria-hidden="true"></i></button>
+              <button class="art-action" aria-label="Share"><i class="ti ti-share-2" aria-hidden="true"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="art-card">
+      <div class="art-card-img" style="background:linear-gradient(135deg,#1e1e2a,#2a2a3e);">
+        <i class="ti ti-ball-football" aria-hidden="true"></i>
+        <div class="art-cat-pill">Sports</div>
+      </div>
+      <div class="art-body">
+        <div class="art-title">Nigeria's Super Eagles Qualify for 2026 World Cup Final With Stunning Comeback</div>
+        <div class="art-meta">
+          <div class="art-source"><div class="art-source-dot"></div><span>ESPN</span></div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span>5h ago</span>
+            <div class="art-actions">
+              <button class="art-action" aria-label="Bookmark"><i class="ti ti-bookmark" aria-hidden="true"></i></button>
+              <button class="art-action" aria-label="Share"><i class="ti ti-share-2" aria-hidden="true"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Two col: trending + sidebar -->
+  <div class="two-col">
+    <!-- Trending list -->
+    <div>
+      <div class="grid-section-title">Most read today</div>
+      <div class="list-card">
+        <div class="list-item">
+          <div class="list-num">01</div>
+          <div>
+            <div class="list-title">China and US Announce Joint Space Station Agreement in Surprise Diplomatic Breakthrough</div>
+            <div class="list-meta">BBC World · 47 min ago · 8 min read</div>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="list-num">02</div>
+          <div>
+            <div class="list-title">Apple's Neural Engine Chip Sets New AI Benchmark, Outperforming Dedicated GPU Clusters</div>
+            <div class="list-meta">Wired · 2h ago · 4 min read</div>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="list-num">03</div>
+          <div>
+            <div class="list-title">WHO Declares Mpox Variant Under Control After Rapid Multinational Response</div>
+            <div class="list-meta">Reuters Health · 4h ago · 6 min read</div>
+          </div>
+        </div>
+        <div class="list-item">
+          <div class="list-num">04</div>
+          <div>
+            <div class="list-title">Pakistan Floods Displace Estimated 2.3 Million as Monsoon Season Intensifies</div>
+            <div class="list-meta">Al Jazeera · 6h ago · 5 min read</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-title">Browse by category</div>
+        <div class="cat-chips">
+          <div class="cat-chip active">All</div>
+          <div class="cat-chip">World</div>
+          <div class="cat-chip">Business</div>
+          <div class="cat-chip">Tech</div>
+          <div class="cat-chip">Health</div>
+          <div class="cat-chip">Science</div>
+          <div class="cat-chip">Sports</div>
+          <div class="cat-chip">Entertainment</div>
+        </div>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-title">Trending topics</div>
+        <div class="trend-item">
+          <span class="trend-tag">#1</span>
+          <span class="trend-label">Climate Treaty</span>
+          <span class="trend-count">12.4k</span>
+        </div>
+        <div class="trend-item">
+          <span class="trend-tag">#2</span>
+          <span class="trend-label">Federal Reserve</span>
+          <span class="trend-count">8.1k</span>
+        </div>
+        <div class="trend-item">
+          <span class="trend-tag">#3</span>
+          <span class="trend-label">World Cup 2026</span>
+          <span class="trend-count">6.7k</span>
+        </div>
+        <div class="trend-item">
+          <span class="trend-tag">#4</span>
+          <span class="trend-label">GPT-5</span>
+          <span class="trend-count">5.9k</span>
+        </div>
+        <div class="trend-item">
+          <span class="trend-tag">#5</span>
+          <span class="trend-label">Space Diplomacy</span>
+          <span class="trend-count">4.2k</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
