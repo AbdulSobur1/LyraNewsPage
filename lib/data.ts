@@ -1,3 +1,5 @@
+/* ─────────── Types ─────────── */
+
 export interface ArticleItem {
   slug: string;
   title: string;
@@ -10,6 +12,7 @@ export interface ArticleItem {
   readTime: string;
   imageIcon?: string;
   imageGradient?: string;
+  imageUrl?: string;
   externalUrl?: string;
 }
 
@@ -24,7 +27,39 @@ export interface CategoryItem {
   label: string;
 }
 
-/* ── All full articles (with content for detail pages) ── */
+/* ─────────── Helpers ─────────── */
+
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "")
+    .slice(0, 200);
+}
+
+function computeTimeAgo(date: Date | string): string {
+  const now = Date.now();
+  const then = typeof date === "string" ? new Date(date).getTime() : date.getTime();
+  const diffMs = now - then;
+  const diffMins = Math.floor(diffMs / 60000);
+  if (diffMins < 1) return "just now";
+  if (diffMins < 60) return `${diffMins}m ago`;
+  const diffHours = Math.floor(diffMins / 60);
+  if (diffHours < 24) return `${diffHours}h ago`;
+  const diffDays = Math.floor(diffHours / 24);
+  if (diffDays === 1) return "1 day ago";
+  return `${diffDays} days ago`;
+}
+
+function computeReadTime(text: string): string {
+  const wpm = 200;
+  const words = text.split(/\s+/).length;
+  const minutes = Math.max(1, Math.ceil(words / wpm));
+  return `${minutes} min read`;
+}
+
+/* ─────────── Mock Articles (fallback) ─────────── */
+
 export const allArticles: ArticleItem[] = [
   {
     slug: "climate-treaty-geneva",
@@ -37,6 +72,7 @@ export const allArticles: ArticleItem[] = [
     timeAgo: "2 hours ago",
     readTime: "5 min read",
     imageIcon: "globe",
+    externalUrl: "https://reuters.com/article/climate-treaty-geneva",
   },
   {
     slug: "us-china-space-station",
@@ -48,6 +84,7 @@ export const allArticles: ArticleItem[] = [
     source: "BBC World",
     timeAgo: "47 min ago",
     readTime: "8 min read",
+    externalUrl: "https://bbc.com/news/us-china-space-agreement",
   },
   {
     slug: "un-emergency-session",
@@ -59,17 +96,19 @@ export const allArticles: ArticleItem[] = [
     source: "Associated Press",
     timeAgo: "4 hours ago",
     readTime: "6 min read",
+    externalUrl: "https://apnews.com/article/un-emergency-session",
   },
   {
     slug: "pakistan-floods",
     title: "Pakistan Floods Displace Estimated 2.3 Million as Monsoon Season Intensifies",
     dek: "Unprecedented monsoon rainfall has submerged vast areas of Sindh and Balochistan provinces, with authorities warning that the worst may be yet to come.",
-    content: `ISLAMABAD — Catastrophic monsoon flooding in Pakistan has displaced an estimated 2.3 million people across Sindh and Balochistan provinces, with the Pakistan Meteorological Department warning that rainfall is expected to continue for at least another two weeks.\n\nEntire villages have been submerged, with only rooftops visible across vast areas of the Indus River plain. The Pakistani military has deployed 45,000 troops for rescue and relief operations, while international aid agencies are scrambling to provide shelter, clean water, and medical supplies.\n\n"This is a climate catastrophe of historic proportions," said Prime Minister Shehbaz Sharif after surveying the damage by helicopter. "We need the international community's full support."\n\nThe United Nations has launched a $620 million emergency appeal, and the U.S. Agency for International Development has pledged an initial $50 million in aid. The World Bank has approved $350 million in emergency financing for reconstruction.`,
+    content: `ISLAMABAD — Catastrophic monsoon flooding in Pakistan has displaced an estimated 2.3 million people across Sindh and Balochistan provinces, with the Pakistan Meteorological Department warning that rainfall is expected to continue for at least another two weeks.\n\nEntire villages have been submerged, with only rooftops visible across vast areas of the Indus River plain. The Pakistani military has deployed 45,000 troops for rescue and relief operations, while international aid agencies are scrambling to provide shelter, clean water, and medical supplies.\n\n"This is a climate catastrophe of historic proportions," said Prime Minister Shehbaz Sharif after surveying the damage by helicopter. "We need the international community\'s full support."\n\nThe United Nations has launched a $620 million emergency appeal, and the U.S. Agency for International Development has pledged an initial $50 million in aid. The World Bank has approved $350 million in emergency financing for reconstruction.`,
     category: "World",
     categorySlug: "world",
     source: "Al Jazeera",
     timeAgo: "6 hours ago",
     readTime: "5 min read",
+    externalUrl: "https://aljazeera.com/news/pakistan-floods",
   },
   {
     slug: "fed-rates-hold",
@@ -83,6 +122,7 @@ export const allArticles: ArticleItem[] = [
     readTime: "4 min read",
     imageIcon: "chart-line",
     imageGradient: "linear-gradient(135deg,#2a1e1e,#3a2a1e)",
+    externalUrl: "https://bloomberg.com/news/fed-rates-hold",
   },
   {
     slug: "global-markets-rally-fed",
@@ -94,6 +134,7 @@ export const allArticles: ArticleItem[] = [
     source: "Bloomberg",
     timeAgo: "1 hour ago",
     readTime: "4 min read",
+    externalUrl: "https://bloomberg.com/news/markets-rally-fed",
   },
   {
     slug: "openai-gpt5-release",
@@ -107,6 +148,7 @@ export const allArticles: ArticleItem[] = [
     readTime: "4 min read",
     imageIcon: "device-laptop",
     imageGradient: "linear-gradient(135deg,#1e2a1e,#2a3a2e)",
+    externalUrl: "https://theverge.com/openai-gpt5-release",
   },
   {
     slug: "apple-neural-engine",
@@ -118,6 +160,7 @@ export const allArticles: ArticleItem[] = [
     source: "Wired",
     timeAgo: "2h ago",
     readTime: "4 min read",
+    externalUrl: "https://wired.com/apple-neural-engine-benchmark",
   },
   {
     slug: "eu-antitrust-tech-giants",
@@ -129,6 +172,7 @@ export const allArticles: ArticleItem[] = [
     source: "Associated Press",
     timeAgo: "5 hours ago",
     readTime: "5 min read",
+    externalUrl: "https://apnews.com/eu-antitrust-tech-giants",
   },
   {
     slug: "nigeria-world-cup-qualify",
@@ -142,6 +186,7 @@ export const allArticles: ArticleItem[] = [
     readTime: "3 min read",
     imageIcon: "ball-football",
     imageGradient: "linear-gradient(135deg,#1e1e2a,#2a2a3e)",
+    externalUrl: "https://espn.com/nigeria-world-cup-semifinal",
   },
   {
     slug: "who-mpox-contained",
@@ -153,6 +198,7 @@ export const allArticles: ArticleItem[] = [
     source: "Reuters Health",
     timeAgo: "4h ago",
     readTime: "6 min read",
+    externalUrl: "https://reuters.com/article/who-mpox-contained",
   },
   {
     slug: "tech-giants-ai-summit",
@@ -164,6 +210,7 @@ export const allArticles: ArticleItem[] = [
     source: "BBC News",
     timeAgo: "8 hours ago",
     readTime: "7 min read",
+    externalUrl: "https://bbc.com/news/ai-safety-summit",
   },
   {
     slug: "quantum-computing-breakthrough",
@@ -175,10 +222,50 @@ export const allArticles: ArticleItem[] = [
     source: "Wired",
     timeAgo: "12 hours ago",
     readTime: "6 min read",
+    externalUrl: "https://wired.com/quantum-computing-breakthrough",
+  },
+  // ── Entertainment (new mock articles) ──
+  {
+    slug: "oscars-2026-nominations",
+    title: "Oscars 2026 Nominations Unveiled: Record-Breaking Year for International Films",
+    dek: "The Academy of Motion Picture Arts and Sciences announced nominations with international films dominating the major categories for the first time in Oscars history.",
+    content: `LOS ANGELES — The Academy of Motion Picture Arts and Sciences unveiled nominations for the 98th Academy Awards on Tuesday, with international films making history by sweeping the major categories.\n\nFor the first time, three of the five Best Picture nominees are non-English language films, led by the Japanese epic "Echoes of Time" with 12 nominations. The French-Canadian drama "Northern Lights" received 10 nominations, while the Nigerian entry "Lagos Stories" scored 8.\n\n"Storytelling has no borders," said Academy President Janet Yang. "This year's nominees reflect the truly global nature of cinema today."\n\nThe ceremony, scheduled for March 15, will be hosted by comedian John Mulaney. The telecast will stream live on multiple platforms for the first time.`,
+    category: "Entertainment",
+    categorySlug: "entertainment",
+    source: "Variety",
+    timeAgo: "3h ago",
+    readTime: "3 min read",
+    imageIcon: "device-laptop",
+    imageGradient: "linear-gradient(135deg,#2a1e2a,#3e2a3e)",
+    externalUrl: "https://variety.com/oscars-2026-nominations",
+  },
+  {
+    slug: "beyonce-world-tour-announced",
+    title: "Beyoncé Announces Record-Breaking 100-City World Tour for 2026-2027",
+    dek: "The Renaissance tour sequel promises immersive augmented reality experiences and will visit 40 countries across six continents.",
+    content: `NEW YORK — Beyoncé announced her most ambitious tour yet on Monday — a 100-city global trek spanning 40 countries across six continents, with a final show scheduled for London's Wembley Stadium in September 2027.\n\nThe tour, titled "Eternal Renaissance," will feature state-of-the-art augmented reality integration, allowing each performance to create a unique visual experience using real-time AI-generated imagery that responds to the audience.\n\n"This is going to be an experience unlike anything we've ever done before," Beyoncé said in a statement. "Every city will get its own show — no two nights will be the same."\n\nTickets go on sale starting next month, with dynamic pricing and a fan pre-sale system designed to combat scalping. Industry analysts project the tour could gross over $2 billion, surpassing her own Renaissance World Tour record.`,
+    category: "Entertainment",
+    categorySlug: "entertainment",
+    source: "Billboard",
+    timeAgo: "5h ago",
+    readTime: "4 min read",
+    externalUrl: "https://billboard.com/beyonce-world-tour-2026",
+  },
+  {
+    slug: "netflix-gaming-expansion",
+    title: "Netflix Games Unveils AAA Studio Acquisitions in $5 Billion Gaming Push",
+    dek: "The streaming giant is making its biggest bet yet on interactive entertainment with the acquisition of three major game development studios.",
+    content: `LOS GATOS, CA — Netflix announced the acquisition of three AAA game development studios on Wednesday, signaling a major escalation in its gaming ambitions with a combined investment of $5 billion.\n\nThe acquisitions include the award-winning RPG developer Moonrise Studios, the multiplayer specialist Redgate Interactive, and the mobile gaming powerhouse PixelForge. Combined, the studios employ over 2,500 developers working on projects that will be exclusive to Netflix subscribers.\n\n"This is a defining moment for interactive entertainment on our platform," said Netflix Co-CEO Ted Sarandos. "We're not just adapting shows into games — we're building original worlds that will be experienced first as games and then expanded into film and television."\n\nThe first titles from the newly acquired studios are expected to launch in late 2027, with Netflix planning to offer them at no additional cost to subscribers.`,
+    category: "Entertainment",
+    categorySlug: "entertainment",
+    source: "The Hollywood Reporter",
+    timeAgo: "7h ago",
+    readTime: "5 min read",
+    externalUrl: "https://hollywoodreporter.com/netflix-gaming-expansion",
   },
 ];
 
-/* ── Derived data from allArticles ── */
+/* ─────────── Derived data from allArticles ─────────── */
 
 export const latestArticles: ArticleItem[] = allArticles.filter((a) =>
   ["openai-gpt5-release", "fed-rates-hold", "nigeria-world-cup-qualify"].includes(a.slug),
@@ -193,15 +280,15 @@ export const mostReadArticles: ArticleItem[] = [
   allArticles.find((a) => a.slug === "pakistan-floods")!,
 ];
 
-/* ── Breaking ticker items ── */
 export const tickerItems: string[] = [
   "Global Markets Rally As Fed Signals Rate Pause",
   "UN Emergency Session Called Over Eastern Crisis",
   "Tech Giants Face New Antitrust Framework in EU",
   "Climate Summit Reaches Historic 150-Nation Agreement",
+  "Oscars Nominations Celebrate International Cinema",
+  "Beyoncé Announces Record-Breaking World Tour",
 ];
 
-/* ── Categories ── */
 export const allCategories: CategoryItem[] = [
   { slug: "all", label: "All" },
   { slug: "world", label: "World" },
@@ -213,16 +300,14 @@ export const allCategories: CategoryItem[] = [
   { slug: "entertainment", label: "Entertainment" },
 ];
 
-/* ── Trending topics ── */
 export const trendingTopics: TrendingTopic[] = [
   { tag: "#1", label: "Climate Treaty", count: "12.4k" },
   { tag: "#2", label: "Federal Reserve", count: "8.1k" },
   { tag: "#3", label: "World Cup 2026", count: "6.7k" },
   { tag: "#4", label: "GPT-5", count: "5.9k" },
-  { tag: "#5", label: "Space Diplomacy", count: "4.2k" },
+  { tag: "#5", label: "Oscars 2026", count: "4.2k" },
 ];
 
-/* ── Nav links ── */
 export const navLinks: { label: string; href: string }[] = [
   { label: "Top", href: "/" },
   { label: "World", href: "/world" },
@@ -232,7 +317,7 @@ export const navLinks: { label: string; href: string }[] = [
   { label: "Science", href: "/science" },
 ];
 
-/* ── Helper functions ── */
+/* ─────────── Synchronous helper functions (mock only) ─────────── */
 
 export function getArticleBySlug(slug: string): ArticleItem | undefined {
   return allArticles.find((a) => a.slug === slug);
@@ -259,9 +344,253 @@ export function getCategoryLabel(slug: string): string {
   return allCategories.find((c) => c.slug === slug)?.label ?? slug;
 }
 
-export function computeReadTime(text: string): string {
-  const wpm = 200;
-  const words = text.split(/\s+/).length;
-  const minutes = Math.max(1, Math.ceil(words / wpm));
-  return `${minutes} min read`;
+/* ─────────── Async data fetching from NewsAPI ─────────── */
+
+// Module-level cache — lasts for the lifetime of the serverless function
+let articlesCache: ArticleItem[] | null = null;
+let cacheTimestamp = 0;
+const CACHE_TTL_MS = 2 * 60 * 60 * 1000; // 2 hours — keeps us well under the 100 req/day limit
+
+/**
+ * Map a category slug from the site to a NewsAPI category parameter.
+ * NewsAPI supports: business, entertainment, general, health, science, sports, technology
+ */
+function categoryToNewsApiParam(slug: string): string {
+  const map: Record<string, string> = {
+    world: "general",
+    business: "business",
+    technology: "technology",
+    sports: "sports",
+    science: "science",
+    health: "health",
+    entertainment: "entertainment",
+  };
+  return map[slug] || "general";
+}
+
+async function fetchArticlesFromProvider(): Promise<ArticleItem[]> {
+  const apiKey = process.env.NEWS_API_KEY;
+  const providerName = process.env.NEWS_PROVIDER || "newsapi";
+
+  if (!apiKey) {
+    console.warn("[data] No NEWS_API_KEY set — using mock data");
+    return [];
+  }
+
+  const categories = allCategories.filter((c) => c.slug !== "all");
+  let allFetched: ArticleItem[] = [];
+
+  if (providerName === "newsapi") {
+    // Fetch all categories in parallel (1 req per category)
+    const results = await Promise.allSettled(
+      categories.map(async (cat) => {
+        const newsApiCategory = categoryToNewsApiParam(cat.slug);
+        const params = new URLSearchParams({
+          apiKey: apiKey,
+          country: "us",
+          pageSize: "5",
+          category: newsApiCategory,
+        });
+
+        const res = await fetch(
+          `https://newsapi.org/v2/top-headlines?${params}`,
+          { next: { revalidate: 7200 } }, // Next.js fetch cache: 2 hours
+        );
+
+        if (!res.ok) {
+          console.warn(`[data] NewsAPI error for ${cat.slug}: ${res.status}`);
+          return [];
+        }
+
+        const data = await res.json();
+        if (data.status !== "ok" || !data.articles) return [];
+
+        return data.articles.map((a: any) => normalizeNewsApiArticle(a, cat));
+      }),
+    );
+
+    for (const result of results) {
+      if (result.status === "fulfilled") {
+        allFetched = [...allFetched, ...result.value];
+      }
+    }
+  } else {
+    // Fallback: try the generic provider system
+    try {
+      const { getProvider } = await import("./providers/index");
+      const provider = getProvider();
+      const results = await Promise.allSettled(
+        categories.map((cat) =>
+          provider
+            .fetchByCategory(cat.slug, { pageSize: 5 })
+            .then((articles) =>
+              articles.map((a) => normalizeProviderArticle(a, cat)),
+            )
+            .catch(() => [] as ArticleItem[]),
+        ),
+      );
+      for (const result of results) {
+        if (result.status === "fulfilled") {
+          allFetched = [...allFetched, ...result.value];
+        }
+      }
+    } catch (e) {
+      console.warn("[data] Provider fetch failed:", e);
+    }
+  }
+
+  return allFetched;
+}
+
+function normalizeNewsApiArticle(a: any, category: CategoryItem): ArticleItem {
+  const title = a.title || "Untitled";
+  const description = a.description || "";
+  // Strip the "[+xxx chars]" truncation suffix that NewsAPI appends
+  const rawContent = (a.content || a.description || "").replace(/\s*\[\+\d+ chars\]$/, "");
+  const url = a.url || "";
+
+  return {
+    slug: slugify(title),
+    title,
+    dek: description,
+    content: rawContent,
+    category: category.label,
+    categorySlug: category.slug,
+    source: a.source?.name || "NewsAPI",
+    timeAgo: computeTimeAgo(a.publishedAt || new Date()),
+    readTime: computeReadTime(rawContent || description),
+    imageUrl: a.urlToImage || undefined,
+    externalUrl: url,
+  };
+}
+
+function normalizeProviderArticle(
+  a: { title: string; description: string; content?: string; url?: string; source?: string; publishedAt?: string; imageUrl?: string },
+  category: CategoryItem,
+): ArticleItem {
+  const title = a.title || "Untitled";
+  return {
+    slug: slugify(title),
+    title,
+    dek: a.description || "",
+    content: a.content || a.description || "",
+    category: category.label,
+    categorySlug: category.slug,
+    source: a.source || "News Source",
+    timeAgo: computeTimeAgo(a.publishedAt || new Date()),
+    readTime: computeReadTime(a.content || a.description || ""),
+    imageUrl: a.imageUrl,
+    externalUrl: a.url,
+  };
+}
+
+/**
+ * Merge fetched articles with mock articles, deduplicating by title.
+ * Fetched articles take priority; mock articles fill gaps.
+ */
+function mergeArticles(
+  mock: ArticleItem[],
+  fetched: ArticleItem[],
+): ArticleItem[] {
+  if (fetched.length === 0) return mock;
+
+  const fetchedTitles = new Set(fetched.map((a) => a.title.toLowerCase()));
+  const mockFiltered = mock.filter(
+    (m) => !fetchedTitles.has(m.title.toLowerCase()),
+  );
+
+  // Group fetched by category
+  const byCategory = new Map<string, ArticleItem[]>();
+  for (const a of fetched) {
+    const cat = a.categorySlug;
+    if (!byCategory.has(cat)) byCategory.set(cat, []);
+    byCategory.get(cat)!.push(a);
+  }
+
+  // Keep mock articles for categories that got no fetched articles
+  const mockByCategory = new Map<string, ArticleItem[]>();
+  for (const a of mockFiltered) {
+    const cat = a.categorySlug;
+    if (!mockByCategory.has(cat)) mockByCategory.set(cat, []);
+    mockByCategory.get(cat)!.push(a);
+  }
+
+  const result: ArticleItem[] = [];
+  const seen = new Set<string>();
+
+  const addUnique = (items: ArticleItem[]) => {
+    for (const item of items) {
+      const key = item.title.toLowerCase();
+      if (!seen.has(key)) {
+        seen.add(key);
+        result.push(item);
+      }
+    }
+  };
+
+  // Interleave: fetched first, then mock, per category
+  const allCatSlugs = allCategories
+    .filter((c) => c.slug !== "all")
+    .map((c) => c.slug);
+  for (const catSlug of allCatSlugs) {
+    addUnique(byCategory.get(catSlug) || []);
+    addUnique(mockByCategory.get(catSlug) || []);
+  }
+
+  // Add any uncategorized fetched articles
+  for (const [catSlug, items] of byCategory) {
+    if (allCatSlugs.includes(catSlug)) continue;
+    addUnique(items);
+  }
+
+  return result;
+}
+
+export async function getArticlesAsync(): Promise<ArticleItem[]> {
+  if (articlesCache && Date.now() - cacheTimestamp < CACHE_TTL_MS) {
+    return articlesCache;
+  }
+
+  const fetched = await fetchArticlesFromProvider();
+  const merged = mergeArticles(allArticles, fetched);
+
+  articlesCache = merged;
+  cacheTimestamp = Date.now();
+
+  return merged;
+}
+
+export async function getArticlesByCategoryAsync(
+  categorySlug: string,
+): Promise<ArticleItem[]> {
+  const all = await getArticlesAsync();
+  if (categorySlug === "all") return all;
+  return all.filter((a) => a.categorySlug === categorySlug);
+}
+
+export async function getArticleBySlugAsync(
+  slug: string,
+): Promise<ArticleItem | undefined> {
+  const all = await getArticlesAsync();
+  return all.find((a) => a.slug === slug);
+}
+
+export async function getLatestArticlesAsync(): Promise<ArticleItem[]> {
+  const all = await getArticlesAsync();
+  return all.slice(0, 6);
+}
+
+export async function searchArticlesAsync(
+  query: string,
+): Promise<ArticleItem[]> {
+  const all = await getArticlesAsync();
+  const q = query.toLowerCase();
+  return all.filter(
+    (a) =>
+      a.title.toLowerCase().includes(q) ||
+      a.dek.toLowerCase().includes(q) ||
+      (a.content && a.content.toLowerCase().includes(q)) ||
+      a.source.toLowerCase().includes(q) ||
+      a.category.toLowerCase().includes(q),
+  );
 }

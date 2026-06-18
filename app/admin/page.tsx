@@ -48,7 +48,7 @@ export default function AdminDashboard() {
   };
 
   return (
-    <main className="mx-auto w-full max-w-[1440px] px-5 py-7">
+    <main className="mx-auto w-full max-w-[1440px] px-4 py-5 sm:px-5 sm:py-7">
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>

@@ -39,37 +39,66 @@ export default function AdminArticlesPage() {
         </button>
       </div>
 
-      <div className="overflow-hidden rounded-xl border border-hairline border-[var(--border)]">
-        <table className="w-full text-left text-[13px]">
-          <thead>
-            <tr className="border-b border-hairline border-[var(--border)] bg-[var(--obsidian)]">
-              <th className="px-4 py-3 font-medium text-text-secondary">Title</th>
-              <th className="px-4 py-3 font-medium text-text-secondary">Category</th>
-              <th className="px-4 py-3 font-medium text-text-secondary">Source</th>
-              <th className="px-4 py-3 font-medium text-text-secondary">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {allArticles.map((article) => (
-              <tr
-                key={article.slug}
-                className="border-b border-hairline border-[var(--border)] transition-colors last:border-none hover:bg-[rgba(255,255,255,0.02)]"
-              >
-                <td className="px-4 py-3 text-[var(--text-primary)] max-w-xs truncate">
-                  {article.title}
-                </td>
-                <td className="px-4 py-3 text-text-secondary">{article.category}</td>
-                <td className="px-4 py-3 text-text-secondary">{article.source}</td>
-                <td className="px-4 py-3">
-                  <button className="flex cursor-pointer items-center gap-1 text-[12px] text-text-tertiary transition-colors hover:text-text-primary">
-                    <IconEdit className="h-3.5 w-3.5" aria-hidden="true" />
-                    Edit
-                  </button>
-                </td>
+      {/* Mobile card view */}
+      <div className="block sm:hidden">
+        {allArticles.map((article) => (
+          <div
+            key={article.slug}
+            className="mb-3 rounded-xl border border-hairline border-[var(--border)] bg-[var(--surface)] p-4"
+          >
+            <div className="mb-2 min-w-0">
+              <h3 className="text-[14px] font-bold leading-snug text-[var(--text-primary)] line-clamp-2">
+                {article.title}
+              </h3>
+            </div>
+            <div className="flex flex-wrap items-center gap-2 text-[12px] text-text-secondary">
+              <span className="rounded-[4px] bg-gold/20 px-2 py-[1px] text-[10px] font-semibold text-gold">
+                {article.category}
+              </span>
+              <span>{article.source}</span>
+              <button className="ml-auto flex cursor-pointer items-center gap-1 text-[12px] text-text-tertiary transition-colors hover:text-text-primary">
+                <IconEdit className="h-3.5 w-3.5" aria-hidden="true" />
+                Edit
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden overflow-hidden rounded-xl border border-hairline border-[var(--border)] sm:block">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-[13px]">
+            <thead>
+              <tr className="border-b border-hairline border-[var(--border)] bg-[var(--obsidian)]">
+                <th className="px-4 py-3 font-medium text-text-secondary">Title</th>
+                <th className="px-4 py-3 font-medium text-text-secondary">Category</th>
+                <th className="px-4 py-3 font-medium text-text-secondary">Source</th>
+                <th className="px-4 py-3 font-medium text-text-secondary">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {allArticles.map((article) => (
+                <tr
+                  key={article.slug}
+                  className="border-b border-hairline border-[var(--border)] transition-colors last:border-none hover:bg-[rgba(255,255,255,0.02)]"
+                >
+                  <td className="max-w-xs truncate px-4 py-3 text-[var(--text-primary)]">
+                    {article.title}
+                  </td>
+                  <td className="px-4 py-3 text-text-secondary">{article.category}</td>
+                  <td className="px-4 py-3 text-text-secondary">{article.source}</td>
+                  <td className="px-4 py-3">
+                    <button className="flex cursor-pointer items-center gap-1 text-[12px] text-text-tertiary transition-colors hover:text-text-primary">
+                      <IconEdit className="h-3.5 w-3.5" aria-hidden="true" />
+                      Edit
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </main>
   );

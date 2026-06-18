@@ -59,51 +59,90 @@ export default function AdminSourcesPage() {
         Toggle news providers on or off. Only enabled sources will be used when fetching articles.
       </p>
 
-      <div className="overflow-hidden rounded-xl border border-hairline border-[var(--border)]">
-        <table className="w-full text-left text-[13px]">
-          <thead>
-            <tr className="border-b border-hairline border-[var(--border)] bg-[var(--obsidian)]">
-              <th className="px-4 py-3 font-medium text-text-secondary">Name</th>
-              <th className="px-4 py-3 font-medium text-text-secondary">Provider</th>
-              <th className="px-4 py-3 font-medium text-text-secondary">Status</th>
-              <th className="px-4 py-3 font-medium text-text-secondary">Toggle</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sources.map((source) => (
-              <tr
-                key={source.name}
-                className="border-b border-hairline border-[var(--border)] transition-colors last:border-none hover:bg-[rgba(255,255,255,0.02)]"
+      {/* Mobile card view */}
+      <div className="block sm:hidden">
+        {sources.map((source) => (
+          <div
+            key={source.name}
+            className="mb-3 rounded-xl border border-hairline border-[var(--border)] bg-[var(--surface)] p-4"
+          >
+            <div className="mb-2 flex items-center justify-between">
+              <span className="font-semibold text-[var(--text-primary)]">{source.name}</span>
+              <span
+                className={`inline-flex items-center rounded-full px-2 py-[1px] text-[10px] font-semibold uppercase tracking-[0.05em] ${
+                  source.enabled
+                    ? "bg-green-900/30 text-green-400"
+                    : "bg-red-900/30 text-red-400"
+                }`}
               >
-                <td className="px-4 py-3 text-[var(--text-primary)]">{source.name}</td>
-                <td className="px-4 py-3 text-text-secondary">{source.provider}</td>
-                <td className="px-4 py-3">
-                  <span
-                    className={`inline-flex items-center rounded-full px-2 py-[1px] text-[10px] font-semibold uppercase tracking-[0.05em] ${
-                      source.enabled
-                        ? "bg-green-900/30 text-green-400"
-                        : "bg-red-900/30 text-red-400"
-                    }`}
-                  >
-                    {source.enabled ? "Enabled" : "Disabled"}
-                  </span>
-                </td>
-                <td className="px-4 py-3">
-                  <button
-                    onClick={() => toggleSource(source.name)}
-                    className={`cursor-pointer rounded-md px-3 py-1 text-[11px] font-medium transition-all ${
-                      source.enabled
-                        ? "border border-hairline border-red-900/50 text-red-400 hover:bg-red-900/20"
-                        : "border border-hairline border-green-900/50 text-green-400 hover:bg-green-900/20"
-                    }`}
-                  >
-                    {source.enabled ? "Disable" : "Enable"}
-                  </button>
-                </td>
+                {source.enabled ? "Enabled" : "Disabled"}
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-[12px] text-text-tertiary">Provider: {source.provider}</span>
+              <button
+                onClick={() => toggleSource(source.name)}
+                className={`cursor-pointer rounded-md px-3 py-1 text-[11px] font-medium transition-all ${
+                  source.enabled
+                    ? "border border-hairline border-red-900/50 text-red-400 hover:bg-red-900/20"
+                    : "border border-hairline border-green-900/50 text-green-400 hover:bg-green-900/20"
+                }`}
+              >
+                {source.enabled ? "Disable" : "Enable"}
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden overflow-hidden rounded-xl border border-hairline border-[var(--border)] sm:block">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-[13px]">
+            <thead>
+              <tr className="border-b border-hairline border-[var(--border)] bg-[var(--obsidian)]">
+                <th className="px-4 py-3 font-medium text-text-secondary">Name</th>
+                <th className="px-4 py-3 font-medium text-text-secondary">Provider</th>
+                <th className="px-4 py-3 font-medium text-text-secondary">Status</th>
+                <th className="px-4 py-3 font-medium text-text-secondary">Toggle</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {sources.map((source) => (
+                <tr
+                  key={source.name}
+                  className="border-b border-hairline border-[var(--border)] transition-colors last:border-none hover:bg-[rgba(255,255,255,0.02)]"
+                >
+                  <td className="px-4 py-3 text-[var(--text-primary)]">{source.name}</td>
+                  <td className="px-4 py-3 text-text-secondary">{source.provider}</td>
+                  <td className="px-4 py-3">
+                    <span
+                      className={`inline-flex items-center rounded-full px-2 py-[1px] text-[10px] font-semibold uppercase tracking-[0.05em] ${
+                        source.enabled
+                          ? "bg-green-900/30 text-green-400"
+                          : "bg-red-900/30 text-red-400"
+                      }`}
+                    >
+                      {source.enabled ? "Enabled" : "Disabled"}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <button
+                      onClick={() => toggleSource(source.name)}
+                      className={`cursor-pointer rounded-md px-3 py-1 text-[11px] font-medium transition-all ${
+                        source.enabled
+                          ? "border border-hairline border-red-900/50 text-red-400 hover:bg-red-900/20"
+                          : "border border-hairline border-green-900/50 text-green-400 hover:bg-green-900/20"
+                      }`}
+                    >
+                      {source.enabled ? "Disable" : "Enable"}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <p className="mt-4 text-[11px] text-text-tertiary">

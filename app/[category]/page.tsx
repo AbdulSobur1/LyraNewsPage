@@ -5,9 +5,11 @@ import { DateBar } from "@/components/date-bar";
 import { ArticleCard } from "@/components/article-card";
 import { Sidebar } from "@/components/sidebar";
 import {
-  getArticlesByCategory,
+  getArticlesByCategoryAsync,
   getCategoryLabel,
   allCategories,
+  tickerItems,
+  trendingTopics,
 } from "@/lib/data";
 
 interface Props {
@@ -22,6 +24,9 @@ export async function generateMetadata({ params }: Props) {
     description: `Latest ${label} news and analysis from LyraNews.`,
   };
 }
+
+// Revalidate every hour so page stays in sync with NewsAPI data
+export const revalidate = 3600;
 
 export async function generateStaticParams() {
   return allCategories
@@ -44,13 +49,13 @@ export default async function CategoryPage({ params }: Props) {
   }
 
   const label = getCategoryLabel(category);
-  const articles = getArticlesByCategory(category);
+  const articles = await getArticlesByCategoryAsync(category);
 
   return (
     <>
-      <Ticker />
+      <Ticker items={tickerItems} />
       <Nav />
-      <main className="mx-auto w-full max-w-[1440px] px-5 py-7">
+      <main className="mx-auto w-full max-w-[1440px] px-4 py-5 sm:px-5 sm:py-7">
         <DateBar />
         <h1 className="mb-6 font-serif text-2xl font-bold tracking-[-0.02em]">
           {label}
@@ -70,7 +75,7 @@ export default async function CategoryPage({ params }: Props) {
               </div>
             )}
           </div>
-          <Sidebar />
+          <Sidebar categories={allCategories} trending={trendingTopics} />
         </div>
       </main>
     </>

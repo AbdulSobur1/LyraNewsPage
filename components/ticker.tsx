@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { tickerItems } from "@/lib/data";
 
-export function Ticker() {
+export function Ticker({ items = [] }: { items?: string[] }) {
   const [paused, setPaused] = useState(false);
 
-  // Duplicate items for seamless loop (CSS animates -50%)
-  const items = [...tickerItems, ...tickerItems];
+  // Fallback items if none provided
+  const displayItems = items.length > 0
+    ? [...items, ...items]
+    : ["Loading headlines…", "Loading headlines…"];
 
   return (
     <div className="ticker-wrap flex h-8 items-center overflow-hidden bg-gold">
@@ -27,8 +28,8 @@ export function Ticker() {
           aria-live="off"
           aria-label="Breaking news headlines"
         >
-          {items.map((text, i) => (
-            <span key={i} className="text-[11px] font-medium tracking-[0.01em] text-[#0A0A0B]">
+          {displayItems.map((text, i) => (
+            <span key={i} className="flex-shrink-0 text-[11px] font-medium tracking-[0.01em] text-[#0A0A0B]">
               {text}
               <span className="ml-10 text-[10px] text-black/30">·</span>
             </span>

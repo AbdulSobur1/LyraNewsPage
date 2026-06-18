@@ -31,33 +31,55 @@ export default function AdminCategoriesPage() {
         Categories
       </h1>
 
-      <div className="overflow-hidden rounded-xl border border-hairline border-[var(--border)]">
-        <table className="w-full text-left text-[13px]">
-          <thead>
-            <tr className="border-b border-hairline border-[var(--border)] bg-[var(--obsidian)]">
-              <th className="px-4 py-3 font-medium text-text-secondary">Slug</th>
-              <th className="px-4 py-3 font-medium text-text-secondary">Label</th>
-              <th className="px-4 py-3 font-medium text-text-secondary">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {allCategories.map((cat) => (
-              <tr
-                key={cat.slug}
-                className="border-b border-hairline border-[var(--border)] transition-colors last:border-none hover:bg-[rgba(255,255,255,0.02)]"
-              >
-                <td className="px-4 py-3 text-[var(--text-primary)]">{cat.slug}</td>
-                <td className="px-4 py-3 text-text-secondary">{cat.label}</td>
-                <td className="px-4 py-3">
-                  <button className="flex cursor-pointer items-center gap-1 text-[12px] text-text-tertiary transition-colors hover:text-text-primary">
-                    <IconEdit className="h-3.5 w-3.5" aria-hidden="true" />
-                    Edit
-                  </button>
-                </td>
+      {/* Mobile card view */}
+      <div className="block sm:hidden">
+        {allCategories.map((cat) => (
+          <div
+            key={cat.slug}
+            className="mb-3 rounded-xl border border-hairline border-[var(--border)] bg-[var(--surface)] p-4"
+          >
+            <div className="mb-1 font-semibold text-[var(--text-primary)]">{cat.label}</div>
+            <div className="flex items-center justify-between">
+              <span className="text-[12px] text-text-tertiary">{cat.slug}</span>
+              <button className="flex cursor-pointer items-center gap-1 text-[12px] text-text-tertiary transition-colors hover:text-text-primary">
+                <IconEdit className="h-3.5 w-3.5" aria-hidden="true" />
+                Edit
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden overflow-hidden rounded-xl border border-hairline border-[var(--border)] sm:block">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-[13px]">
+            <thead>
+              <tr className="border-b border-hairline border-[var(--border)] bg-[var(--obsidian)]">
+                <th className="px-4 py-3 font-medium text-text-secondary">Slug</th>
+                <th className="px-4 py-3 font-medium text-text-secondary">Label</th>
+                <th className="px-4 py-3 font-medium text-text-secondary">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {allCategories.map((cat) => (
+                <tr
+                  key={cat.slug}
+                  className="border-b border-hairline border-[var(--border)] transition-colors last:border-none hover:bg-[rgba(255,255,255,0.02)]"
+                >
+                  <td className="px-4 py-3 text-[var(--text-primary)]">{cat.slug}</td>
+                  <td className="px-4 py-3 text-text-secondary">{cat.label}</td>
+                  <td className="px-4 py-3">
+                    <button className="flex cursor-pointer items-center gap-1 text-[12px] text-text-tertiary transition-colors hover:text-text-primary">
+                      <IconEdit className="h-3.5 w-3.5" aria-hidden="true" />
+                      Edit
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </main>
   );

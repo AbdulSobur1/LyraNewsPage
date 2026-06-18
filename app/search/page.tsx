@@ -1,7 +1,7 @@
 import { Ticker } from "@/components/ticker";
 import { Nav } from "@/components/nav";
 import { ArticleCard } from "@/components/article-card";
-import { searchArticles } from "@/lib/data";
+import { searchArticlesAsync, tickerItems } from "@/lib/data";
 import type { Metadata } from "next";
 
 interface Props {
@@ -15,13 +15,13 @@ export const metadata: Metadata = {
 
 export default async function SearchPage({ searchParams }: Props) {
   const { q = "" } = await searchParams;
-  const results = q ? searchArticles(q) : [];
+  const results = q ? await searchArticlesAsync(q) : [];
 
   return (
     <>
-      <Ticker />
+      <Ticker items={tickerItems} />
       <Nav />
-      <main className="mx-auto w-full max-w-[1440px] px-5 py-7">
+      <main className="mx-auto w-full max-w-[1440px] px-4 py-5 sm:px-5 sm:py-7">
         <h1 className="mb-6 font-serif text-2xl font-bold tracking-[-0.02em]">
           Search
         </h1>

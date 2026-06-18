@@ -5,17 +5,34 @@ import { HeroCard } from "@/components/hero-card";
 import { ArticleCard } from "@/components/article-card";
 import { MostReadList } from "@/components/most-read-list";
 import { Sidebar } from "@/components/sidebar";
-import { latestArticles } from "@/lib/data";
+import {
+  getArticlesAsync,
+  getLatestArticlesAsync,
+  tickerItems,
+  allCategories,
+  trendingTopics,
+} from "@/lib/data";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const allArticles = await getArticlesAsync();
+  const latestArticles = await getLatestArticlesAsync();
+
+  // Hero is the first article
+  const heroArticle = allArticles[0];
+
+  // Most read: pick 5 diverse articles
+  const mostRead = allArticles
+    .filter((a) => a.slug !== heroArticle?.slug)
+    .slice(0, 5);
+
   return (
     <>
-      <Ticker />
+      <Ticker items={tickerItems} />
       <Nav />
 
-      <main className="mx-auto w-full max-w-[1440px] px-5 py-7">
+      <main className="mx-auto w-full max-w-[1440px] px-4 py-5 sm:px-5 sm:py-7">
         <DateBar />
-        <HeroCard />
+        <HeroCard article={heroArticle} />
 
         {/* Latest stories grid */}
         <div className="grid-section-title mb-3.5 flex items-center gap-2.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-text-tertiary after:h-px after:flex-1 after:bg-[var(--border)] after:content-['']">
@@ -29,8 +46,8 @@ export default function HomePage() {
 
         {/* Two-column layout: Most read + sidebar */}
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_280px]">
-          <MostReadList />
-          <Sidebar />
+          <MostReadList articles={mostRead} />
+          <Sidebar categories={allCategories} trending={trendingTopics} />
         </div>
       </main>
     </>
