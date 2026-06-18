@@ -11,6 +11,7 @@ import {
 import { useState } from "react";
 import { navLinks } from "@/lib/data";
 import { ThemeToggle } from "./theme-toggle";
+import { NotificationBell } from "./notification-bell";
 
 export function Nav() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -76,6 +77,9 @@ export function Nav() {
           >
             <IconBookmark className="h-4 w-4" aria-hidden="true" />
           </Link>
+
+          {/* Notifications */}
+          <NotificationBell />
 
           {/* Theme toggle */}
           <ThemeToggle />

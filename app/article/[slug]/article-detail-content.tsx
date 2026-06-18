@@ -3,6 +3,7 @@
 import type { ArticleItem } from "@/lib/data";
 import { ShareButton } from "@/components/share-button";
 import { BookmarkButton } from "@/components/bookmark-button";
+import { CommentSection } from "@/components/comment-section";
 import {
   IconClock,
   IconUser,
@@ -162,6 +163,9 @@ export function ArticleDetailContent({ article }: Props) {
           ))}
         </div>
       )}
+
+      {/* Comments section */}
+      <CommentSection articleSlug={article.slug} articleTitle={article.title} />
     </article>
   );
 }

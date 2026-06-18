@@ -1,5 +1,12 @@
 import "dotenv/config";
-import { db, schema } from "../db";
+import { getDb, schema } from "../db";
+
+const _db = getDb();
+if (!_db) {
+  console.error("❌ DATABASE_URL is not set. Set it in .env.local and try again.");
+  process.exit(1);
+}
+const db = _db;
 
 /* ────────── Categories ────────── */
 const categoryData = [

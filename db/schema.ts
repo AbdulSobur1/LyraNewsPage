@@ -6,6 +6,7 @@ import {
   text,
   timestamp,
   varchar,
+  index,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -58,6 +59,27 @@ export const articles = pgTable("articles", {
   isLocal: boolean("is_local").default(false).notNull(),
 });
 
+/**
+ * Comments on articles.
+ * Lightweight: stores commenter name, text, and the article slug it belongs to.
+ * No auth required — just a name for display.
+ */
+export const comments = pgTable(
+  "comments",
+  {
+    id: serial("id").primaryKey(),
+    articleSlug: varchar("article_slug", { length: 500 }).notNull(),
+    name: varchar("name", { length: 100 }).notNull(),
+    text: text("text").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => ({
+    articleSlugIdx: index("comments_article_slug_idx").on(table.articleSlug),
+  }),
+);
+
 export type Source = typeof sources.$inferSelect;
 export type NewSource = typeof sources.$inferInsert;
 
@@ -66,3 +88,6 @@ export type NewCategory = typeof categories.$inferInsert;
 
 export type Article = typeof articles.$inferSelect;
 export type NewArticle = typeof articles.$inferInsert;
+
+export type Comment = typeof comments.$inferSelect;
+export type NewComment = typeof comments.$inferInsert;
